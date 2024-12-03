@@ -1,0 +1,19 @@
+{
+    "name": "npm-versions-test",
+    "private": true,
+    "scripts": {
+        "start": "tsx go.ts"
+    },
+    "devDependencies": {
+        "@types/node": "^22.10.1",
+        "verdaccio": "^6.0.2",
+        "delay": "^6.0.0",
+        "dprint": "^0.47.6",
+        "tsx": "^4.19.2",
+        "typescript": "^5.7.2",
+        "chalk": "^5.3.0",
+        "jest-diff": "^29.7.0"
+    },
+    "packageManager": "pnpm@9.5.0+sha512.140036830124618d624a2187b50d04289d5a087f326c9edfc0ccd733d76c4f52c3a313d4fc148794a2a9d81553016004e6742e8cf850670268a7387fc220c903",
+    "type": "module"
+}

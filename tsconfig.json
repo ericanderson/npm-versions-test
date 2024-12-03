@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "noEmit": true,
+        "strict": true,
+
+      "moduleResolution": "nodenext",
+      "module": "NodeNext",
+
+      "verbatimModuleSyntax": true,
+		// Use correct ESM import behavior
+		"esModuleInterop": true,
+
+		// Disallow features that require cross-file awareness
+		"isolatedModules": true,
+        "noImplicitAny": true
+    }
+}
