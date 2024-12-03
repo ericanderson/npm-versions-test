@@ -1,9 +1,6 @@
 {
     "name": "npm-versions-test",
     "private": true,
-    "scripts": {
-        "start": "tsx go.ts"
-    },
     "devDependencies": {
         "@types/node": "^22.10.1",
         "verdaccio": "^6.0.2",

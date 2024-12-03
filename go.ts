@@ -61,30 +61,8 @@ async function main() {
   });
   await workspace2.pnpmInstall();
 
-  console.log("long delay");
+  console.log("Done. You can ctrl-c when you are ready to stop the server");
 }
-
-// async function editPackageJson(
-//   packageName: string,
-//   callback: (packageJson: any) => void,
-// ) {
-//   const { packageJson } = await readPackageJson(packageName);
-//   callback(packageJson);
-//   await writePackageJson(packageName, packageJson);
-// }
-
-// async function writePackageJson(packageName, packageJson) {
-//   const packageJsonPath = path.join("packages", packageName, "package.json");
-//   await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
-// }
-
-// async function readPackageJson(packageName) {
-//   const packageJsonPath = path.join("packages", packageName, "package.json");
-//   const packageJson = JSON.parse(
-//     await fs.readFile(packageJsonPath, "utf-8"),
-//   );
-//   return { packageJson, packageJsonPath };
-// }
 
 async function startVerdaccio(workingDir: string) {
   const verdaccioSelfPath = path.join(workingDir, "verdaccio");
@@ -138,8 +116,7 @@ async function startVerdaccio(workingDir: string) {
   const verdaccio = await runServer(verdaccioOptions as any);
 
   return new Promise((resolve, reject) => {
-    verdaccio.listen(VERDACCIO_PORT, (event: any) => {
-      console.log("event", event);
+    verdaccio.listen(VERDACCIO_PORT, () => {
       resolve(verdaccio);
     });
   });

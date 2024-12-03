@@ -1,0 +1,1 @@
+run `tsx go.ts`
