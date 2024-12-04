@@ -6,7 +6,7 @@ import { Dir } from "./Dir.js";
 
 export class Package extends Dir {
   static async create(packageDir: string, name: string, version: string) {
-    await fs.mkdir(packageDir);
+    await fs.mkdir(packageDir, { recursive: true });
     await fs.writeFile(
       path.join(packageDir, "package.json"),
       JSON.stringify({
@@ -25,7 +25,7 @@ export class Package extends Dir {
   name: string;
   packageJsonPath: string;
 
-  private constructor(name: string, packageDir: string) {
+  constructor(name: string, packageDir: string) {
     super(packageDir);
     this.name = name;
     this.packageJsonPath = path.join(this.path, "package.json");
@@ -79,4 +79,39 @@ export class Package extends Dir {
     );
     return packageJson;
   };
+}
+
+export class SoloNpmPackage extends Package {
+  static async create(
+    packageDir: string,
+    name: string,
+    version: string,
+  ) {
+    await fs.mkdir(packageDir, { recursive: true });
+    await fs.writeFile(
+      path.join(packageDir, "package.json"),
+      JSON.stringify({
+        name,
+        version,
+        dependencies: {},
+        peerDependencies: {},
+        devDependencies: {},
+      }),
+      "utf-8",
+    );
+
+    await fs.writeFile(
+      path.join(packageDir, ".npmrc"),
+      `registry=http://localhost:4873/
+  //localhost:4873/:_authToken="ZmQ3NmRjYTk5ZDY2MjUwZWQ3YjE5OTM0YzY3MTdjYjk6MGM4MGFjMDgxZDU2MjM="
+  `,
+      "utf-8",
+    );
+
+    return new SoloNpmPackage(name, packageDir);
+  }
+
+  private constructor(name: string, packageDir: string) {
+    super(name, packageDir);
+  }
 }

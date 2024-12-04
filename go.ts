@@ -5,6 +5,7 @@ import * as fs from "node:fs/promises";
 import { tmpdir } from "node:os";
 import * as path from "node:path";
 import { promisify } from "node:util";
+import { Package, SoloNpmPackage } from "./lib/Package.js";
 import { PnpmWorkspace } from "./lib/PnpmWorkspace.js";
 import { startVerdaccio } from "./lib/startVerdaccio.js";
 
@@ -42,11 +43,24 @@ async function main() {
 
   const lib = await workspace.makePackage("lib", "0.2.0");
   await lib.editPackageJson((packageJson) => {
-    packageJson.peerDependencies[client.name] = "^2.0.9"; // || >=2.0.0-beta.0";
+    packageJson.peerDependencies[client.name] = "^2.0.9 || >=2.0.0-beta.0";
   });
   await workspace.publish();
 
   await workspace.pnpmInstall();
+
+  const npmPackage = await SoloNpmPackage.create(
+    path.join(baseDir, "plan-packages", "app"),
+    "app",
+    "1.0.0",
+  );
+  await npmPackage.editPackageJson((packageJson) => {
+    packageJson.dependencies[lib.name] = "^0.2.0";
+    packageJson.dependencies[client.name] = "^2.1.0-beta.0";
+    packageJson.dependencies[sdk.name] = "^1.0.0";
+  });
+
+  await npmPackage.execAndPrint("npm install");
 
   const workspace2 = await PnpmWorkspace.create(
     path.join(baseDir, "workspace2"),
