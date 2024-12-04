@@ -53,16 +53,30 @@ export class PnpmWorkspace extends Dir {
   };
 
   pnpmInstall = async () => {
-    console.log(await this.exec("pnpm install"));
+    await this.execAndPrint("pnpm install");
+    // console.log();
+    // console.log(chalk.bold("pnpm install"));
+    // const { stdout, stderr } = await this.exec("pnpm install");
+
+    // if (stdout && stdout.length > 0) {
+    //   console.log("> " + stdout.replace(/\n/g, "\n> "));
+    // }
+    // if (stderr && stderr.length > 0) {
+    //   console.error(chalk.red(stderr));
+    // }
   };
 
   makePackage = async (name: string, version: string) => {
-    const packageDir = path.join(this.path, "packages", name);
-    return Package.create(packageDir, name, version);
+    return Package.create(
+      path.join(this.path, "packages", name),
+      name,
+      version,
+    );
   };
 
   publish = async () => {
     try {
+      console.log();
       console.log(chalk.bold("Publishing..."));
 
       const out = await this.exec("pnpm publish -r");

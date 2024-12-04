@@ -40,7 +40,10 @@ export class Package extends Dir {
   editPackageJson = async (
     callback: (packageJson: any) => void,
   ) => {
-    console.log(chalk.bold(`Editing package.json for ${this.name}`));
+    console.log();
+    console.log(
+      chalk.bold(`Editing package.json for ${chalk.cyan(this.name)}`),
+    );
     const packageJson = await this.readPackageJson();
     const original = JSON.stringify(packageJson, null, 2);
     callback(packageJson);
@@ -54,6 +57,8 @@ export class Package extends Dir {
         bColor: chalk.green,
         aIndicator: "-",
         bIndicator: "+",
+        contextLines: 1,
+        omitAnnotationLines: true,
       }),
     );
     await this.writePackageJson(packageJson);

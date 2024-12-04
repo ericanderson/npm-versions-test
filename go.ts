@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import delay from "delay";
 import { exec } from "node:child_process";
 import * as fs from "node:fs/promises";
@@ -17,16 +18,15 @@ process.on("SIGINT", function() {
 export const execAsync = promisify(exec);
 
 async function main() {
-  const workingDir = await fs.mkdtemp(path.join(tmpdir(), "verdaccio-"));
-  console.log("Working dir", workingDir);
+  const baseDir = await fs.mkdtemp(path.join(tmpdir(), "npm-versions-test"));
+  console.log("Base dir", baseDir);
 
-  const verdaccio = await startVerdaccio(workingDir);
+  const verdaccio = await startVerdaccio(baseDir);
   await delay(1000);
 
   console.log("Server is running");
 
-  const workspaceDir = path.join(workingDir, "workspace");
-  const workspace = await PnpmWorkspace.create(workspaceDir);
+  const workspace = await PnpmWorkspace.create(path.join(baseDir, "workspace"));
 
   const client = await workspace.makePackage("client", "2.0.9");
   await workspace.publish();
@@ -48,8 +48,9 @@ async function main() {
 
   await workspace.pnpmInstall();
 
-  const workspace2Dir = path.join(workingDir, "workspace2");
-  const workspace2 = await PnpmWorkspace.create(workspace2Dir);
+  const workspace2 = await PnpmWorkspace.create(
+    path.join(baseDir, "workspace2"),
+  );
   const app = await workspace2.makePackage("app", "0.0.0");
   await app.editPackageJson(packageJson => {
     packageJson.dependencies[lib.name] = "^0.2.0";
@@ -58,7 +59,11 @@ async function main() {
   });
   await workspace2.pnpmInstall();
 
-  console.log("Done. You can ctrl-c when you are ready to stop the server");
+  console.log(
+    chalk.bold("\n\nDone. Helpful info:"),
+  );
+  console.log(`  - baseDir: ${chalk.yellow(baseDir)}`);
+  console.log(`  - To shutdown server: ${chalk.red("ctrl-c")}`);
 }
 
 main();
